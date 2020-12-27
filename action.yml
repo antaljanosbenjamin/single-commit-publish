@@ -1,0 +1,42 @@
+name: 'Single commit publish'
+description: 'Publishes files to the specified branch in a single commit with force push to erase history.'
+inputs:
+  github-token:
+    description: 'GitHub token to use for push operation.'
+    required: true
+  github-actor:
+    description: 'GitHub username to use for push operation.'
+    required: false
+    default: ${{ github.actor }}
+  github-repository:
+    description: 'The GitHub repository to where the files should be published in <username/repo> format.'
+    required: false
+    default: ${{ github.repository }}
+  branch:
+    description: 'The branch to where the files should be published.'
+    required: true
+  source-dir:
+    description: 'The source directory that contains all the files and directories that are going to be published. The directory structure inside this folder is going to be kept for the published files and directories.'
+    required: false
+    default: ${{ github.workspace }}
+  files-and-dirs:
+    description: 'List of paths (relative or absolute) of the files and directories to publish. They must be inside the source directory. The directory structure relative to source directory is kept for publishing.'
+    required: true
+  author-name:
+    description: 'The name that will appear in the commit.'
+    required: false
+    default: github-actions
+  author-email:
+    description: 'The email that will appear in the commit.'
+    required: false
+    default: github-actions@noreply.github.com
+  commit-message:
+    description: 'The commit message that will appear in the commit.'
+    required: false
+    default: 'Publish from #${{ github.run_number }}'
+runs:
+  using: composite
+  steps:
+    - run: 'python3 ${{ github.action_path }}/main.py --github-token ${{ inputs.github-token }} --github-actor ${{ inputs.github-actor }} --github-repository ${{ inputs.github-repository }} --branch ${{ inputs.branch }} --files-and-dirs ${{ inputs.files-and-dirs }} --author-name "${{ inputs.author-name }}" --author-email "${{ inputs.author-email }}" --commit-message "${{ inputs.commit-message }}"'
+      shell: bash
+      working-directory: ${{ inputs.source-dir }}

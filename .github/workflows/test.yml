@@ -1,0 +1,47 @@
+name: test
+on: [push]
+jobs:
+  test-example:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          branch: test-example-published-files
+          source-dir: test
+          files-and-dirs: 'a.txt b.txt some_dir "file with space.txt" "directory with space"'
+  test-simple:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          branch: test-simple-published-files
+          files-and-dirs: README.md
+  test-complex:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./
+        with:
+          github-token: ${{ secrets.PAT }}
+          github-actor: antaljanosbenjamin
+          github-repository: antaljanosbenjamin/test-repository
+          branch: test-complex-published-files
+          source-dir: test
+          files-and-dirs: 'a.txt ${{ github.workspace }}/test/b.txt some_dir other_dir/e.txt "file with space.txt" "directory with space"'
+          author-name: 'Test Author'
+          author-email: author+email@noreply.test.com
+          commit-message: 'Some very long commit message that uses build number and hashmark #${{ github.run_number }}'
+  test-source-dir-with-space:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          branch: test-source-dir-with-space-published-files
+          source-dir: test/directory with space
+          files-and-dirs: d.txt
