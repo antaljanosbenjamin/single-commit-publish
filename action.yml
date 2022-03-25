@@ -1,5 +1,8 @@
 name: 'Single commit publish'
 description: 'Publishes files to the specified branch in a single commit with force push to erase history.'
+branding:
+  icon: arrow-up-circle
+  color: red
 inputs:
   github-token:
     description: 'GitHub token to use for push operation.'
